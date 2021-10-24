@@ -1,0 +1,45 @@
+{
+    "workbench.colorTheme": "Dracula",
+    "files.autoSave": "afterDelay",
+    "editor.fontFamily": "'Fira Code',Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "powermode.enabled": true,
+    "powermode.enableShake": false,
+    "powermode.enableStatusBarComboCounter": false,
+    "powermode.enableStatusBarComboTimer": false,
+    "powermode.explosionOffset": 0.2,
+    "powermode.explosionSize": 3.5,
+    "workbench.iconTheme": "material-icon-theme",
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.cursorSmoothCaretAnimation":true,
+    "editor.suggest.preview": true,
+    "javascript.inlayHints.parameterNames.enabled": "all",
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "[css]": {
+        "editor.matchBrackets": "never"
+    },
+    "editor.guides.bracketPairs": true,
+    "editor.bracketPairColorization.enabled": true,
+    "[html]": {
+        "editor.matchBrackets": "never",
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.linkedEditing": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "vscode_custom_css.imports":[
+        "file:///D://vscode_custom//color.css"
+    ],
+    "liveServer.settings.donotShowInfoMsg": true,
+    "react-native-tools.showUserTips": false,
+    "explorer.confirmDelete": false,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "terminal.integrated.tabs.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open"
+}
