@@ -10,14 +10,21 @@
     "powermode.explosionOffset": 0.2,
     "powermode.explosionSize": 3.5,
     "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorCustomizations": {
+        "editorCursor.background": "#ff2ced",
+        "editorCursor.foreground": "#ff2ced",
+    },
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    "editor.cursorSmoothCaretAnimation":true,
+    "editor.cursorSmoothCaretAnimation": true,
     "editor.suggest.preview": true,
     "javascript.inlayHints.parameterNames.enabled": "all",
     "typescript.inlayHints.parameterNames.enabled": "all",
+    "vscode_custom_css.imports": [
+        "file:///D://vscode_custom//color.css"
+    ],
     "[css]": {
         "editor.matchBrackets": "never"
     },
@@ -31,9 +38,6 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "vscode_custom_css.imports":[
-        "file:///D://vscode_custom//color.css"
-    ],
     "liveServer.settings.donotShowInfoMsg": true,
     "react-native-tools.showUserTips": false,
     "explorer.confirmDelete": false,
