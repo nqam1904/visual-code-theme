@@ -12,7 +12,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.colorCustomizations": {
         "editorCursor.background": "#ff2ced",
-        "editorCursor.foreground": "#ff2ced",
+        "editorCursor.foreground": "#ff2ced"
     },
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "editor.formatOnPaste": true,
