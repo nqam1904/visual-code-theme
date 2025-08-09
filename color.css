@@ -1,119 +1,768 @@
+/* =============================================================================
+   VS Code — Animated + Glass Liquid Theme (FULL w/ KNOBS)
+   Author: you & ChatGPT
+   Tips:
+   - Dùng với extension “Custom CSS and JS Loader”.
+   - Tất cả tốc độ gradient dùng biến --anim-speed (đồng bộ toàn theme).
+   - Có biến “brand preset”, “blur nhẹ”, “shimmer” để tinh cực nhanh.
+   ========================================================================== */
+
+/* =============== 0) GLOBAL VARIABLES & KEYFRAMES =============== */
 :root {
-  --gradient-dir1: 45deg;
-  --gradient-dir2: 90deg;
-  --gradient-dir3: -45deg;
-}
-/* .mtk10,
-.mtk15 {
-  color: transparent;
-  background-image: linear-gradient(to left top, #fc6c8f, #ff2ced, #ffb86c);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* ---- Brand Colors (Default – Candy) ---- */
+  --grad-1: #fc6c8f;
+  --grad-2: #ff2ced;
+  --grad-3: #ffb86c;
+  --grad-4: #2cccff;
+  --grad-5: #20e3b2;
+  --grad-6: #ffcc70;
+  --grad-7: #c850c0;
+  --grad-8: #4158d0;
+
+  /* ---- Glass / Glow ---- */
+  --glass-bg: rgba(25, 25, 35, .55);
+  --glass-bd: rgba(255, 255, 255, .08);
+  --glow: 0 0 18px rgba(255, 44, 237, .35);
+
+  /* ---- Motion / Speed (one knob for all) ---- */
+  --anim-speed: 6s;
+  /* Đồng bộ tốc độ gradient khắp nơi */
+
+  /* ---- Blur power (tối ưu hiệu năng) ---- */
+  --blur-tab: 14px;
+  /* Tab glass */
+  --blur-status: 14px;
+  /* Status bar glass */
+  --blur-scrolltrack: 8px;
+  /* Scrollbar track glass */
+  --blur-caret: 4px;
+  /* Caret mini glass */
+
+  /* ---- Shimmer controls ---- */
+  --shimmer-opacity: .22;
+  /* 0.12 rất nhẹ | 0.3 khá rõ */
+  --shimmer-speed: 4.2s;
+  /* Tăng lên 6–7s nếu muốn chậm dịu */
+
+  /* ---- Easing ---- */
+  --anim-ease: cubic-bezier(.4, 0, .2, 1);
 }
 
-.mtk5 {
-  color: transparent;
-  background-image: linear-gradient(var(--gradient-dir1), #20e3b2, #4dd78a);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-}
-.mtk16 {
-  color: transparent;
-  background-image: linear-gradient(var(--gradient-dir1), #d66efd, #6a5af9);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-}
-.mtk9,
-.mtk17 {
-  color: transparent;
-  background-image: linear-gradient(to right top, #0072ff, #2cccff);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-}
-.mtk18 {
-  color: transparent;
-  background-image: linear-gradient(var(--gradient-dir2), #82aaff 50%, #3d6ef7);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  font-style: normal;
-}
-.mtk3 {
-  color: transparent;
-  background-image: linear-gradient(to right top, #c29ffd, #ffb4dc, #fef0d1);
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-}
-.mtk7 {
-  color: transparent;
-  background-image: linear-gradient(to right bottom, #fc6c8f, #ffb86c);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-} */
+/* ---------- OPTIONAL BRAND PRESETS (bật bằng copy đè block này vào sau :root) ----------
+:root{ --grad-1:#7c3aed; --grad-2:#5b21b6; --grad-3:#2563eb; --grad-4:#06b6d4;
+       --grad-5:#14b8a6; --grad-6:#22c55e; --grad-7:#a78bfa; --grad-8:#60a5fa; }  Indigo→Teal (Cool)
+:root{ --grad-1:#ff6b6b; --grad-2:#f43f5e; --grad-3:#f97316; --grad-4:#f59e0b;
+       --grad-5:#fcd34d; --grad-6:#fb7185; --grad-7:#ef4444; --grad-8:#eab308; }  Sunset (Warm)
+:root{ --grad-1:#8E8E93; --grad-2:#77777d; --grad-3:#5e5e64; --grad-4:#4a4a50;
+       --grad-5:#3a3a40; --grad-6:#2d2d33; --grad-7:#9b87f5; --grad-8:#22d3ee; }  Titan + Neon Edge (Neutral)
+--------------------------------------------------------------------------------------- */
 
-/* Other */
-.monaco-workbench
-  .activitybar
-  > .content
-  :not(.monaco-menu)
-  > .monaco-action-bar
-  .action-item.checked
-  .active-item-indicator:before {
+/* ---- Keyframes (đồng bộ qua --anim-speed) ---- */
+@keyframes candyFlow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+@keyframes softPulse {
+
+  0%,
+  100% {
+    opacity: .65;
+    filter: saturate(1)
+  }
+
+  50% {
+    opacity: 1;
+    filter: saturate(1.3)
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: scaleX(0)
+  }
+
+  100% {
+    transform: scaleX(1)
+  }
+}
+
+@keyframes liquidSheen {
+  0% {
+    transform: translateX(-120%) skewX(-15deg)
+  }
+
+  100% {
+    transform: translateX(220%) skewX(-15deg)
+  }
+}
+
+@keyframes breadcrumbFlow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+@keyframes caretFlow {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  :root {
+    --anim-speed: 0s
+  }
+
+  * {
+    animation-duration: 0s !important
+  }
+}
+
+/* =============== 1) TITLE BAR =============== */
+.monaco-workbench .part.titlebar {
+  background-size: 250% 250%;
+  animation: candyFlow var(--anim-speed) linear infinite;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .06);
+}
+
+/* =============== 2) ACTIVITY BAR =============== */
+.monaco-workbench .activitybar>.content :not(.monaco-menu)>.monaco-action-bar .action-item.checked .active-item-indicator:before {
   border: 0;
   width: 3px;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  background-image: linear-gradient(to bottom, #fc6c8f, #ff2ced);
+  box-shadow: var(--glow);
 }
-.monaco-workbench
-  .activitybar
-  > .content
-  :not(.monaco-menu)
-  > .monaco-action-bar
-  .badge
-  .badge-content {
-  background-image: linear-gradient(var(--gradient-dir2), #fc6c8f, #ff2ced);
+
+.monaco-workbench .activitybar>.content :not(.monaco-menu)>.monaco-action-bar .badge .badge-content {
+  background-image: linear-gradient(90deg, var(--grad-1), var(--grad-2));
+  box-shadow: 0 0 8px rgba(255, 44, 237, .35);
 }
-/* Tab editor */
-.monaco-workbench
-  .part.editor
-  > .content
-  .editor-group-container
-  > .title
-  .tabs-container
-  > .tab.active.tab-border-top
-  > .tab-border-top-container {
-  background-size: 400% 400%;
-  background-image: linear-gradient(
-    -45deg,
-    #fc6c8f,
-    #ff2ced,
-    #ffb86c,
-    #2cccff,
-    #20e3b2,
-    #ffcc70,
-    #c850c0,
-    #4158d0
-  );
-  animation: gradient 3s ease-in infinite;
+
+/* =============== 3) TABS / EDITOR STRIP =============== */
+/* Vạch top tab active (gradient động) */
+.monaco-workbench .part.editor>.content .editor-group-container>.title .tabs-container>.tab.active.tab-border-top>.tab-border-top-container {
   height: 3px;
+  background-image: linear-gradient(-45deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 400%;
+  animation: candyFlow var(--anim-speed) ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(44, 204, 255, .35));
 }
-@keyframes gradient {
+
+/* Tab glass container */
+.monaco-workbench .part.editor .tabs-container .tab {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  isolation: isolate;
+}
+
+/* Nền kính phủ full tab */
+.monaco-workbench .part.editor .tabs-container .tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04)),
+    radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, .14) 0%, transparent 60%);
+  backdrop-filter: blur(var(--blur-tab)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-tab)) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 6px 20px rgba(0, 0, 0, .25);
+  opacity: .85;
+  z-index: 0;
+}
+
+/* Shimmer vệt sáng cho tab active (có knobs) */
+.monaco-workbench .part.editor .tabs-container .tab.active::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -10%;
+  left: -10%;
+  width: 100px;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .26) 50%, rgba(255, 255, 255, 0) 100%);
+  filter: blur(8px);
+  opacity: calc(var(--shimmer-opacity) + .04);
+  animation: liquidSheen var(--shimmer-speed) ease-in-out infinite;
+}
+
+/* Text tab nổi trên mặt kính */
+.monaco-workbench .part.editor .tabs-container .tab .tab-label {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+.monaco-workbench .part.editor .tabs-container .tab.active .tab-label {
+  text-shadow: 0 0 6px rgba(65, 88, 208, .35)
+}
+
+/* Hover tab: underline trượt */
+.monaco-workbench .part.editor .tabs-container .tab:not(.active):hover::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background-image: linear-gradient(90deg, var(--grad-4), var(--grad-5));
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: slideIn .18s var(--anim-ease) forwards;
+}
+
+.monaco-workbench .part.editor .tabs-container .tab:not(.active):hover::before {
+  filter: brightness(1.08)
+}
+
+/* =============== 4) BREADCRUMBS =============== */
+.monaco-breadcrumbs .breadcrumb-item .label-name {
+  background-image: linear-gradient(90deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: breadcrumbFlow var(--anim-speed) linear infinite;
+  font-weight: 500;
+}
+
+.monaco-breadcrumbs .breadcrumb-item:hover .label-name {
+  filter: brightness(1.2)
+}
+
+.monaco-breadcrumbs .breadcrumb-item .monaco-icon-label:hover .label-name {
+  text-shadow: 0 0 8px rgba(44, 204, 255, .45)
+}
+
+/* =============== 5) EDITOR DECORATIONS =============== */
+/* Dòng hiện tại */
+.monaco-editor .view-overlays .current-line {
+  border: 0 !important;
+  background: linear-gradient(90deg, rgba(44, 204, 255, .10), rgba(0, 0, 0, 0));
+}
+
+.monaco-editor .view-overlays .current-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-image: linear-gradient(180deg, var(--grad-4), var(--grad-5));
+  background-size: 200% 200%;
+  animation: candyFlow var(--anim-speed) ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(44, 204, 255, .45);
+}
+
+/* Selection */
+.monaco-editor .view-overlays .selected-text {
+  background-image: linear-gradient(90deg, rgba(255, 44, 237, .22), rgba(32, 227, 178, .22)) !important;
+  outline: 1px solid rgba(255, 255, 255, .06);
+}
+
+/* Bracket match */
+.monaco-editor .bracket-match {
+  background: rgba(65, 88, 208, .18) !important;
+  border: 1px solid rgba(65, 88, 208, .45) !important;
+  animation: softPulse 2.2s ease-in-out infinite;
+}
+
+/* =============== 6) COMMAND PALETTE (GLASS) =============== */
+.quick-input-widget,
+.context-view .monaco-menu .monaco-action-bar.vertical {
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-bd);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .45), var(--glow);
+}
+
+/* =============== 7) SCROLLBAR (GLASS OPTIMIZED) =============== */
+.monaco-scrollable-element>.scrollbar {
+  position: relative;
+  width: 6px !important;
+  height: 6px !important;
+  backdrop-filter: blur(var(--blur-scrolltrack)) saturate(1.1);
+  -webkit-backdrop-filter: blur(var(--blur-scrolltrack)) saturate(1.1);
+}
+
+.monaco-scrollable-element>.scrollbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)),
+    radial-gradient(90% 120% at 50% 0%, rgba(255, 255, 255, .12) 0%, transparent 60%);
+  border: 1px solid rgba(255, 255, 255, .12);
+}
+
+.monaco-scrollable-element>.scrollbar>.slider {
+  background: rgba(255, 255, 255, .20);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .18);
+  transition: background-color 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  will-change: background-color, box-shadow, border-color;
+  /* không animate left/top/size */
+}
+
+.monaco-scrollable-element>.scrollbar>.slider:hover {
+  background: rgba(255, 255, 255, .28);
+  border-color: rgba(255, 255, 255, .24);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .28);
+}
+
+/* =============== 8) STATUS BAR — GLASS LIQUID + TOP GRADIENT LINE =============== */
+:root {
+  /* bạn có thể chỉnh nhanh độ dày đường gradient ở mép trên */
+  --status-topline: 3px;
+  /* 2–4px là đẹp */
+}
+
+.monaco-workbench .part.statusbar {
+  position: relative;
+  isolation: isolate;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  background: transparent !important;
+  /* để nhìn thấy lớp glass bên dưới */
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, .28);
+}
+
+/* NỀN GLASS phủ toàn bộ (không màu, chỉ kính mờ + highlight nhẹ) */
+.monaco-workbench .part.statusbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* highlight mép trên/trái kiểu “liquid” */
+    radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, .18) 0%, transparent 60%),
+    /* lớp kính chung */
+    linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .05));
+  backdrop-filter: blur(var(--blur-status, 14px)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-status, 14px)) saturate(1.2);
+  border-top: 1px solid rgba(255, 255, 255, .20);
+  opacity: .96;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    /* gờ sáng trong */
+    inset 0 -20px 26px rgba(0, 0, 0, .18);
+  /* chiều sâu kính */
+}
+
+/* DẢI GRADIENT CHẠY Ở MÉP TRÊN (giống tabs) */
+.monaco-workbench .part.statusbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--status-topline);
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(-45deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 100%;
+  animation: candyFlow var(--anim-speed, 6s) ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, .35));
+}
+
+/* Nội dung (text/icon) luôn ở trên cùng, rõ ràng */
+.monaco-workbench .part.statusbar .statusbar-item,
+.monaco-workbench .part.statusbar .items-container {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+/* =============== 9) CARET (GLASS LIQUID + GRADIENT) =============== */
+.monaco-editor .cursors-layer .cursor {
+  background-image: linear-gradient(180deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 400%;
+  animation: caretFlow var(--anim-speed) linear infinite;
+  width: 2px !important;
+  border-radius: 2px;
+  backdrop-filter: blur(var(--blur-caret)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-caret)) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .3);
+  box-shadow: 0 0 8px rgba(255, 255, 255, .25);
+  z-index: 999;
+}
+
+/* =============== 10) HIGH CONTRAST SAFETY =============== */
+.hc-black :root {
+  --glow: 0 0 0 rgba(0, 0, 0, 0)
+}
+
+/* =============== 11) COMPOSITE TITLE BAR =============== */
+
+/* === Composite Title Bar — glass + gradient === */
+.monaco-workbench .composite.title.has-composite-bar {
+  position: relative;
+  background: transparent !important;
+  /* Bỏ nền mặc định */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  isolation: isolate;
+  /* Cho phép pseudo-layer hoạt động */
+}
+
+/* Glass layer */
+.monaco-workbench .composite.title.has-composite-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(100% 120% at 0% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(var(--blur-composite, 14px)) saturate(1.25);
+  -webkit-backdrop-filter: blur(var(--blur-composite, 14px)) saturate(1.25);
+  opacity: 0.95;
+}
+
+/* Gradient animation chạy phía dưới chữ */
+.monaco-workbench .composite.title.has-composite-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(-45deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 400%;
+  animation: candyFlow var(--anim-speed, 6s) ease-in-out infinite;
+  opacity: 0.25;
+  /* Giảm độ sáng gradient cho dịu mắt */
+}
+
+/* Chữ & icon bên trên */
+.monaco-workbench .composite.title.has-composite-bar>* {
+  position: relative;
+  z-index: 2;
+}
+
+/* ====== Chữ rõ hơn khi không active ====== */
+.monaco-workbench .composite.title.has-composite-bar .title-label,
+.monaco-workbench .composite.title.has-composite-bar .action-label {
+  color: rgba(255, 255, 255, 0.9) !important;
+  /* Rõ hơn */
+  font-weight: 500;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
+.monaco-workbench .composite.title.has-composite-bar .tabs-container .tab {
+  opacity: 1;
+  transition: color 0.2s ease;
+}
+
+.monaco-workbench .composite.title.has-composite-bar .tabs-container .tab:not(.active) {
+  color: rgba(255, 255, 255, 0.75) !important;
+  /* Tăng sáng */
+}
+
+.monaco-workbench .composite.title.has-composite-bar .tabs-container .tab:hover {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* =============== 12) LIST ROW — GLASS + TOP GRADIENT LIKE TAB =============== */
+/* =============== 12) LIST ROW — keep default spacing, pill like Tab =============== */
+:root {
+  --row-radius: 12px;
+  /* bo góc pill */
+  --row-pad-y: 2px;
+  /* lùi nhẹ khỏi mép trên/dưới của content */
+  --row-topline: 3px;
+  /* dải gradient trên: 2–3px */
+}
+
+/* KHÔNG đụng độ spacing gốc của row */
+.monaco-list .monaco-list-row {
+  background: transparent !important
+}
+
+/* Làm overlay trên vùng nội dung (sau indent) */
+.monaco-list .monaco-list-row .monaco-tl-contents {
+  position: relative;
+  /* border-radius: var(--row-radius); */
+  overflow: hidden;
+  /* tránh tràn làm “ảo giác” tăng khoảng cách */
+  isolation: isolate;
+}
+
+/* GLASS layer (giống tab ::before) */
+.monaco-list .monaco-list-row:hover .monaco-tl-contents::before,
+.monaco-list .monaco-list-row.focused .monaco-tl-contents::before,
+.monaco-list .monaco-list-row.selected .monaco-tl-contents::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--row-pad-y);
+  bottom: var(--row-pad-y);
+  z-index: 0;
+  pointer-events: none;
+  /* border-radius: inherit; */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04)),
+    radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, .14) 0%, transparent 60%);
+  backdrop-filter: blur(var(--blur-tab, 14px)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-tab, 14px)) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .16);
+  /* chỉ inner shadow để không “ăn” ra ngoài row */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
+  opacity: .9;
+}
+
+/* Dải GRADIENT chạy ở mép trên (giống tab-border-top) */
+.monaco-list .monaco-list-row:hover .monaco-tl-contents::after,
+.monaco-list .monaco-list-row.focused .monaco-tl-contents::after,
+.monaco-list .monaco-list-row.selected .monaco-tl-contents::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--row-pad-y);
+  height: var(--row-topline);
+  /* border-top-left-radius: calc(var(--row-radius) - 1px);
+  border-top-right-radius: calc(var(--row-radius) - 1px); */
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(-45deg,
+      var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
+      var(--grad-5), var(--grad-6), var(--grad-7), var(--grad-8));
+  background-size: 400% 100%;
+  animation: candyFlow var(--anim-speed, 6s) ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, .35));
+}
+
+/* Chữ rõ trên nền glass */
+.monaco-list .monaco-list-row:is(:hover, .focused, .selected) .monaco-icon-label .label-name {
+  position: relative;
+  z-index: 2;
+  color: rgba(255, 255, 255, .95) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+/* Xoá màu chọn mặc định để không đè overlay */
+.monaco-list .monaco-list-row.selected {
+  background: transparent !important;
+}
+
+
+/* Keyframe di chuyển gradient */
+/* @keyframes gradientMove {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
-}
+} */
+
+/* =========================
+   🎨 Gradient Theme Manager
+   Chỉ cần đổi giá trị của --theme 
+   để đổi vibe giao diện
+   ========================= */
+
+/* :root {
+  --theme: pastel-neon;
+  /* pastel-neon | cyberpunk | ocean-breeze | sunset-glow | minty-fresh */
+
+/* =========================
+     🎨 Pastel Neon
+     ========================= */
+/* --pastel-neon-1: #ff9a9e;
+  --pastel-neon-2: #fad0c4;
+  --pastel-neon-3: #fad0c4;
+  --pastel-neon-4: #fbc2eb;
+  --pastel-neon-5: #a6c1ee;
+  --pastel-neon-6: #d4fc79;
+  --pastel-neon-7: #96e6a1;
+  --pastel-neon-8: #fddb92; */
+
+/* =========================
+     🎨 Cyberpunk
+     ========================= */
+/* --cyberpunk-1: #ff2a6d;
+  --cyberpunk-2: #ff9a00;
+  --cyberpunk-3: #ff2079;
+  --cyberpunk-4: #651fff;
+  --cyberpunk-5: #00e5ff;
+  --cyberpunk-6: #00ff9f;
+  --cyberpunk-7: #ff6ec4;
+  --cyberpunk-8: #7873f5;
+
+  /* =========================
+     🎨 Ocean Breeze
+     ========================= */
+/* --ocean-breeze-1: #00c6ff;
+  --ocean-breeze-2: #0072ff;
+  --ocean-breeze-3: #6dd5ed;
+  --ocean-breeze-4: #2193b0;
+  --ocean-breeze-5: #b2fefa;
+  --ocean-breeze-6: #0ed2f7;
+  --ocean-breeze-7: #02aab0;
+  --ocean-breeze-8: #00cdac;
+
+  /* =========================
+     🎨 Sunset Glow
+     ========================= */
+/* --sunset-glow-1: #ff9966; 
+  --sunset-glow-2: #ff5e62;
+  --sunset-glow-3: #ff7e5f;
+  --sunset-glow-4: #feb47b;
+  --sunset-glow-5: #f953c6;
+  --sunset-glow-6: #b91d73;
+  --sunset-glow-7: #f12711;
+  --sunset-glow-8: #f5af19;
+
+  /* =========================
+     🎨 Minty Fresh
+     ========================= */
+/* --minty-fresh-1: #a8ff78;
+  --minty-fresh-2: #78ffd6;
+  --minty-fresh-3: #43cea2;
+  --minty-fresh-4: #185a9d;
+  --minty-fresh-5: #00c9ff;
+  --minty-fresh-6: #92fe9d;
+  --minty-fresh-7: #4facfe;
+  --minty-fresh-8: #00f2fe;
+} */
+
+/* =========================
+   🎨 Tự động chọn màu theo theme
+   ========================= */
+/* :root {
+  --grad-1: var(--$ {
+      theme
+    }
+
+    -1);
+
+  --grad-2: var(--$ {
+      theme
+    }
+
+    -2);
+
+  --grad-3: var(--$ {
+      theme
+    }
+
+    -3);
+
+  --grad-4: var(--$ {
+      theme
+    }
+
+    -4);
+
+  --grad-5: var(--$ {
+      theme
+    }
+
+    -5);
+
+  --grad-6: var(--$ {
+      theme
+    }
+
+    -6);
+
+  --grad-7: var(--$ {
+      theme
+    }
+
+    -7);
+
+  --grad-8: var(--$ {
+      theme
+    }
+
+    -8);
+} */
+
+/* =========================
+   🔥 Ví dụ áp dụng vào background gradient
+   ========================= */
+/* .glass-gradient {
+  background: linear-gradient(90deg,
+      var(--grad-1),
+      var(--grad-2),
+      var(--grad-3),
+      var(--grad-4),
+      var(--grad-5),
+      var(--grad-6),
+      var(--grad-7),
+      var(--grad-8));
+  background-size: 300% 300%;
+  animation: gradientMove 8s ease infinite;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+} */
+
+/* @keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+} */
