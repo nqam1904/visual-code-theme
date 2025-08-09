@@ -360,7 +360,7 @@
 .monaco-workbench .part.statusbar {
   position: relative;
   isolation: isolate;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px;
   overflow: hidden;
   background: transparent !important;
   /* để nhìn thấy lớp glass bên dưới */
@@ -511,7 +511,6 @@
 }
 
 /* =============== 12) LIST ROW — GLASS + TOP GRADIENT LIKE TAB =============== */
-/* =============== 12) LIST ROW — keep default spacing, pill like Tab =============== */
 :root {
   --row-radius: 12px;
   /* bo góc pill */
@@ -521,21 +520,17 @@
   /* dải gradient trên: 2–3px */
 }
 
-/* KHÔNG đụng độ spacing gốc của row */
-.monaco-list .monaco-list-row {
-  background: transparent !important
-}
-
-/* Làm overlay trên vùng nội dung (sau indent) */
+/* Vùng nội dung sau indent */
 .monaco-list .monaco-list-row .monaco-tl-contents {
   position: relative;
-  /* border-radius: var(--row-radius); */
+  /* border-radius: var(--row-radius, 12px); */
+
   overflow: hidden;
-  /* tránh tràn làm “ảo giác” tăng khoảng cách */
   isolation: isolate;
+  /* tạo stacking context: ::before(0) < ::after(1) < content(2) */
 }
 
-/* GLASS layer (giống tab ::before) */
+/* GLASS dưới nội dung (không đặt height cố định) */
 .monaco-list .monaco-list-row:hover .monaco-tl-contents::before,
 .monaco-list .monaco-list-row.focused .monaco-tl-contents::before,
 .monaco-list .monaco-list-row.selected .monaco-tl-contents::before {
@@ -543,23 +538,22 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: var(--row-pad-y);
-  bottom: var(--row-pad-y);
+  top: var(--row-pad-y, 2px);
+  bottom: var(--row-pad-y, 2px);
   z-index: 0;
+  /* DƯỚI nội dung */
   pointer-events: none;
-  /* border-radius: inherit; */
   background:
     linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04)),
     radial-gradient(120% 120% at 0% 0%, rgba(255, 255, 255, .14) 0%, transparent 60%);
   backdrop-filter: blur(var(--blur-tab, 14px)) saturate(1.2);
   -webkit-backdrop-filter: blur(var(--blur-tab, 14px)) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, .16);
-  /* chỉ inner shadow để không “ăn” ra ngoài row */
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
   opacity: .9;
 }
 
-/* Dải GRADIENT chạy ở mép trên (giống tab-border-top) */
+/* Top gradient line ở trên glass nhưng dưới nội dung */
 .monaco-list .monaco-list-row:hover .monaco-tl-contents::after,
 .monaco-list .monaco-list-row.focused .monaco-tl-contents::after,
 .monaco-list .monaco-list-row.selected .monaco-tl-contents::after {
@@ -567,11 +561,10 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: var(--row-pad-y);
-  height: var(--row-topline);
-  /* border-top-left-radius: calc(var(--row-radius) - 1px);
-  border-top-right-radius: calc(var(--row-radius) - 1px); */
+  top: var(--row-pad-y, 2px);
+  height: var(--row-topline, 3px);
   z-index: 1;
+  /* DƯỚI nội dung, TRÊN glass */
   pointer-events: none;
   background-image: linear-gradient(-45deg,
       var(--grad-1), var(--grad-2), var(--grad-3), var(--grad-4),
@@ -581,15 +574,19 @@
   filter: drop-shadow(0 0 4px rgba(255, 255, 255, .35));
 }
 
-/* Chữ rõ trên nền glass */
-.monaco-list .monaco-list-row:is(:hover, .focused, .selected) .monaco-icon-label .label-name {
+/* ĐẶT nội dung lên trên cùng để không bị mờ */
+.monaco-list .monaco-list-row .monaco-tl-contents>*,
+.monaco-list .monaco-list-row .monaco-icon-label,
+.monaco-list .monaco-list-row .monaco-icon-label .label-name,
+.monaco-list .monaco-list-row .codicon {
   position: relative;
   z-index: 2;
-  color: rgba(255, 255, 255, .95) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  /* TRÊN ::before/::after */
+  filter: none !important;
+  opacity: 1 !important;
 }
 
-/* Xoá màu chọn mặc định để không đè overlay */
+/* Xoá nền selected mặc định */
 .monaco-list .monaco-list-row.selected {
   background: transparent !important;
 }
